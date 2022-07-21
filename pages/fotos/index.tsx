@@ -1,12 +1,12 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import IlhaCard from '../components/IlhaCard'
-import { getIlhas, Ilha } from '../services'
-import styles from '../styles/Home.module.css'
+import styles from '../../styles/Ilha.module.css'
 import styled from 'styled-components'
-import Headers from '../components/Header'
-import ReactLoading from 'react-loading';
+import { getFotos, Ilha, Foto } from '../../services'
+import FotoCard from '../../components/FotoCard'
+import Headers from '../../components/Header'
+import { log } from 'console'
 
 const ListContainer = styled.div`
   display: flex;
@@ -21,11 +21,12 @@ const ListContainer = styled.div`
 `
 
 const Home: NextPage = () => {
-  const [ilhas, setIlhas] = useState<Ilha[]>([])
+  const [fotos, setFotos] = useState<Foto[]>([])
 
   useEffect(() => {
-    getIlhas()
-      .then((data) =>setIlhas(data))
+    console.log('TAMALCOPRA?')
+    getFotos()
+      .then((data) =>setFotos(data))
   })
   return (
     <div className={styles.container}>
@@ -34,16 +35,13 @@ const Home: NextPage = () => {
         <meta name="description" content="Minha aplicação da aceleração JAVA" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <Headers />
       <main className={styles.main}>
-        <h1>Ilhas</h1>
-        <ListContainer className="ilhas">
-          {ilhas.length > 0 ? ilhas.map((ilha) => (
-            <IlhaCard key={ilha.id} ilha={ilha} newCard={false} />
-          )) : (
-            <ReactLoading type="spin" color="lightblue" height={100} width={100} />
-          )}
-          <IlhaCard ilha={{} as Ilha} newCard />
+        <ListContainer className="fotos">
+          {fotos.length > 0 && fotos.map((foto) => (
+            <FotoCard key={foto.id} foto={foto} />
+          ))}
         </ListContainer>
       </main>
 

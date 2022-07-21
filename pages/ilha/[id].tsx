@@ -1,11 +1,12 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useState } from 'react'
-import IlhaCard from '../components/IlhaCard'
-import { getIlhas, Ilha } from '../services'
-import styles from '../styles/Home.module.css'
+import styles from '../../styles/Ilha.module.css'
 import styled from 'styled-components'
-import Headers from '../components/Header'
+import { getRegistrosIlhas, Ilha, Registro } from '../../services'
+import { useRouter } from 'next/router'
+import RegistroCard from '../../components/RegistroCard'
+import Headers from '../../components/Header'
 import ReactLoading from 'react-loading';
 
 const ListContainer = styled.div`
@@ -21,11 +22,13 @@ const ListContainer = styled.div`
 `
 
 const Home: NextPage = () => {
-  const [ilhas, setIlhas] = useState<Ilha[]>([])
+  const [registros, setRegistros] = useState<Registro[]>([])
+  const router = useRouter()
+  const { id } = router.query as { id: string }
 
   useEffect(() => {
-    getIlhas()
-      .then((data) =>setIlhas(data))
+    getRegistrosIlhas(id)
+      .then((data) =>setRegistros(data))
   })
   return (
     <div className={styles.container}>
@@ -34,16 +37,18 @@ const Home: NextPage = () => {
         <meta name="description" content="Minha aplicação da aceleração JAVA" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <Headers />
       <main className={styles.main}>
-        <h1>Ilhas</h1>
-        <ListContainer className="ilhas">
-          {ilhas.length > 0 ? ilhas.map((ilha) => (
-            <IlhaCard key={ilha.id} ilha={ilha} newCard={false} />
-          )) : (
+        <h1 className={styles.title}>Agro TechFields</h1>
+        <ListContainer className="registros">
+          {registros.length > 0 ? (
+            registros.map((registro) => (
+              <RegistroCard key={registro.id} registro={registro} />
+            ))
+          ) : (
             <ReactLoading type="spin" color="lightblue" height={100} width={100} />
           )}
-          <IlhaCard ilha={{} as Ilha} newCard />
         </ListContainer>
       </main>
 
